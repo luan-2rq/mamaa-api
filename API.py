@@ -36,11 +36,8 @@ def fetch_stock_data():
         redis_client.set(symbol, json.dumps(stock_data))
 
 def update_stock_data():
-    r = redis.Redis(host='localhost', port=6379, db=0)
-
     while True:
         fetch_stock_data()
-
         time.sleep(60)
 
 if __name__ == '__main__':
