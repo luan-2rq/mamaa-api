@@ -25,7 +25,7 @@ def get_stock_data(stock):
     if stock is None:
         return jsonify({'message': 'stock not supplied'}), 404
     
-    stock_data_cached = redis_client.get(stock.upper())
+    stock_data_cached = redis_client.get("stock_data:" + stock.upper())
 
     if stock_data_cached is not None:
         return jsonify(json.loads(stock_data_cached)), 200
@@ -36,7 +36,17 @@ def get_stock_data(stock):
     
     return jsonify(stock_data), 200
 
+@app.route('/all_stock_data', methods=['GET'])
+def get_all_stock_data():
+    try:
+        keys = redis_client.keys("stock_data:*")
+        stock_data = []
+        for key in keys:
+            stock_data.append(json.loads(redis_client.get(key)))
 
+        return jsonify(stock_data), 200
+    except:
+        return jsonify({'message': 'error fetching stock data'}), 500
 
 @app.route('/refresh_stock_data', methods=['GET'])
 def refresh_stock_data():
@@ -47,7 +57,7 @@ def fetch_stock_data(stock = 'AMZN'):
     try:
         stock_ticker = yf.Ticker(stock)
         stock_data = stock_ticker.info
-        redis_client.set(stock, json.dumps(stock_data), ex=int(os.getenv('REDIS_EXPIRY', 60)))
+        redis_client.set("stock_data:" + stock, json.dumps(stock_data), ex=int(os.getenv('REDIS_EXPIRY', 60)))
     except:
         return None
     
