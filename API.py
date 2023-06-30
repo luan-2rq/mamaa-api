@@ -2,14 +2,18 @@ import json
 import redis
 import requests
 import matplotlib.pyplot as plt
-import time
+from datetime import datetime
 import os
 import yfinance as yf
+
+from rq import Queue
+from rq.job import Job
 
 from dotenv import load_dotenv
 from threading import Thread
 from flask import Flask, request, jsonify
 from apscheduler.schedulers.background import BackgroundScheduler
+from postgres_repository import PostgresRepository
 
 load_dotenv()
 
@@ -17,6 +21,7 @@ load_dotenv()
 mamaa = ['AAPL','AMZN','FB','GOOG','MSFT','NFLX','TSLA']
 
 redis_client = redis.Redis(host=os.getenv('REDIS_HOST'), port=os.getenv('REDIS_PORT'), password=os.getenv('REDIS_PASSWORD'))
+q = Queue(connection=redis_client)
 
 app = Flask(__name__)
 
@@ -53,12 +58,20 @@ def refresh_stock_data():
     fetch_stock_list()
     return jsonify({'message': 'stock data refreshed'}), 200
 
+
 def fetch_stock_data(stock = 'AMZN'):
     try:
         stock_ticker = yf.Ticker(stock)
         stock_data = stock_ticker.info
         redis_client.set("stock_data:" + stock, json.dumps(stock_data), ex=int(os.getenv('REDIS_EXPIRY', 60)))
-    except:
+        data = {
+            'name': stock_data['symbol'],
+            'price': stock_data['currentPrice'],
+            'timestamp': datetime.utcnow()
+        }
+        job = q.enqueue_call(func=PostgresRepository.save_stock, args=(data,), result_ttl=500)
+    except Exception as e:
+        print(e)
         return None
     
     return stock_data

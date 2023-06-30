@@ -10,7 +10,8 @@ class PostgresRepository:
                                           database=os.getenv('POSTGRES_DB'))
 
             return connection, connection.cursor()
-        except:
+        except Exception as e:
+            print(e)
             return None, None
 
     def save_stock(stock):
@@ -21,7 +22,7 @@ class PostgresRepository:
             return False
         try:
             cursor.execute("INSERT INTO stock (name, price, timestamp) VALUES (%s, %s, %s)", (stock['name'], stock['price'], stock['timestamp']))
-            cursor.commit()
+            connection.commit()
             cursor.close()
             connection.close()
             return True
