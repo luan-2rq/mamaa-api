@@ -4,7 +4,7 @@ API to access mamaa stock data in near real time.
 ## Como rodar
 1. Abra o seu editor favorito na raiz do projeto
 2. Com o python instalado, crie um abiente virtual e ative-o
-   1. Rode o comando `python =m venv venv` e aguarde.
+   1. Rode o comando `python -m venv venv` e aguarde.
    2. Se você estiver no windows, rode o comando `.\venv\Scripts\activate` para entrar dentro do ambiente virtual. Se você estiver no Linux ou Mac, rode o comando `. venv/bin/activate`. Após isso, você deverá ver um `(venv)` no início da sua linha de comando.
 3. Com o ambiente virtual ativo, atualize o gerenciador de pacotes `pip` rodando o comando `pip install --upgrade pip` (aqui, se você estiver no Windows, pode ser que ele dê uma mensagem de erro, mas não se preocupe, pois é um alarme falso. Você pode verificar a versão instalada do pip rodando o comando `pip --version`).
 4. Após isso, execute o comando `pip install -r requirements.txt` para instalar todas as dependências do projeto.
