@@ -1,7 +1,4 @@
-from dotenv import load_dotenv
 from os import getenv
-
-load_dotenv()
 
 config = {
     'host': getenv('APP_HOST'),
