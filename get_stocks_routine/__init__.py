@@ -3,7 +3,7 @@ import logging
 
 import azure.functions as func
 
-from .API import fetch_stock_data
+from .service import fetch_stock_data
 
 def main(mytimer: func.TimerRequest) -> None:
     utc_timestamp = datetime.datetime.utcnow().replace(
