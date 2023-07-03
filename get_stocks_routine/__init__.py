@@ -12,7 +12,6 @@ def main(mytimer: func.TimerRequest) -> None:
     if mytimer.past_due:
         logging.info('The timer is past due!')
 
-    logging.info('Fetching stocks values and saving on Redis')
-    fetch_stock_data()
+    logging.info(f"top_10_symbols: {fetch_stock_data()}")
 
     logging.info('Success! \nPython timer trigger function ran at %s', utc_timestamp)

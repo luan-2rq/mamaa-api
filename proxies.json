@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json.schemastore.org/proxies",
+  "proxies": {
+    "get_current_stock_price": {
+      "matchCondition": {
+        "route": "/api/get_current_stock_price",
+        "methods": ["GET"]
+      },
+      "backendUri": "http://localhost:7071/api/get_current_stock_price",
+      "responseOverrides": {
+        "response.headers.Access-Control-Allow-Origin": "*"
+      }
+    }
+  }
+}

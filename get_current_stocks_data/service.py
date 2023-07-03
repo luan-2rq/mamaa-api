@@ -6,7 +6,7 @@ import yfinance as yf
 from datetime import datetime
 from ..config import config
 
-stock_symbols = ['AAPL']
+stock_symbols = ['META', 'AAPL', 'AMZN', 'NFLX', 'GOOGL']
 redis_configs: dict = config.get('redis')
 
 redis_client = redis.Redis(
@@ -14,9 +14,6 @@ redis_client = redis.Redis(
     redis_configs.get('port')
 )
 
-def get_current_stock_price():
-    stocks_data = []
-    for stock in stock_symbols :
-        stocks_data.append(redis_client.get(stock))
-    logging.info(stocks_data)
+def get_top_10_stocks_data():
+    stocks_data = redis_client.get("faang")
     return stocks_data
